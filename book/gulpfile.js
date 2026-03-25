@@ -1,19 +1,19 @@
 import fs from "fs";
 import gulp from "gulp";
 import path from "path";
+import { Readable } from "stream";
+import Vinyl from "vinyl";
 
 import fileinclude from "gulp-file-include";
 import htmlmin from "gulp-htmlmin";
 import typograf from "gulp-typograf";
 import importCss from "gulp-import-css";
 
-import imagemin from "gulp-imagemin";
-import webp from "gulp-webp";
-import avif from "gulp-avif";
-
 import rename from "gulp-rename";
 import concat from "gulp-concat";
 import watch from "gulp-watch";
+
+import { chapters } from "./src/chapters.js";
 
 const NON_BREAKING_HYPHEN = "‑";
 const WATCHERS = {
@@ -29,13 +29,77 @@ const typografRules = [
   },
 ];
 
+function chapterUrl(slug) {
+  return slug === "index" ? "index.html" : `${slug}.html`;
+}
+
+function buildTocHtml(currentSlug) {
+  return chapters
+    .map((ch) => {
+      const cls = ch.slug === currentSlug ? " class='toc-current'" : "";
+      return `<li${cls}><a href='${chapterUrl(ch.slug)}'>${ch.title}</a></li>`;
+    })
+    .join("\n");
+}
+
+function buildNavHtml(chapterIndex) {
+  const prev = chapters[chapterIndex - 1];
+  const next = chapters[chapterIndex + 1];
+  const num = chapterIndex + 1;
+  const total = chapters.length;
+
+  let links = "<div class='nav-links'>";
+  if (prev) {
+    links += `<a href='${chapterUrl(prev.slug)}' class='nav-prev'>${prev.title}</a>`;
+  } else {
+    links += "<span></span>";
+  }
+  links += `<span class='nav-current'>${num}\u2009/\u2009${total}</span>`;
+  if (next) {
+    links += `<a href='${chapterUrl(next.slug)}' class='nav-next'>${next.title}</a>`;
+  } else {
+    links += "<span></span>";
+  }
+  links += "</div>";
+
+  const toc =
+    "<details class='toc'>" +
+    "<summary>Содержание</summary>" +
+    `<ol class='toc-list'>${buildTocHtml(chapters[chapterIndex].slug)}</ol>` +
+    "</details>";
+
+  return `<nav class='chapter-nav'>${links}${toc}</nav>`;
+}
+
 gulp.task("html", function () {
-  return gulp
-    .src("./src/index.html")
+  const template = fs.readFileSync("./src/page-template.html", "utf8");
+  const srcBase = path.resolve("./src");
+
+  const files = chapters.map((chapter, i) => {
+    const sectionsIncludes = chapter.sections
+      .map((num) => `    @@include('./sections/${num}.html')`)
+      .join("\n");
+
+    const navHtml = buildNavHtml(i);
+
+    let pageContent = template
+      .replace("<!-- SECTIONS_PLACEHOLDER -->", sectionsIncludes)
+      .replace(/<!-- NAV_PLACEHOLDER -->/g, navHtml);
+
+    const filename = chapterUrl(chapter.slug);
+
+    return new Vinyl({
+      base: srcBase,
+      path: path.join(srcBase, filename),
+      contents: Buffer.from(pageContent),
+    });
+  });
+
+  return Readable.from(files)
     .pipe(
       fileinclude({
         prefix: "@@",
-        basepath: "@file",
+        basepath: srcBase,
       })
     )
     .pipe(
@@ -70,21 +134,24 @@ gulp.task("js", function () {
     .pipe(gulp.dest("./dist/js/"));
 });
 
-gulp.task("minify", function () {
+gulp.task("minify", async function () {
+  const imagemin = (await import("gulp-imagemin")).default;
   return gulp
     .src("./src/img/**/*.{jpg,png}")
     .pipe(imagemin())
     .pipe(gulp.dest("./dist/img/"));
 });
 
-gulp.task("webp", function () {
+gulp.task("webp", async function () {
+  const webp = (await import("gulp-webp")).default;
   return gulp
     .src("./src/img/**/*.{jpg,png}")
     .pipe(webp())
     .pipe(gulp.dest("./dist/img/"));
 });
 
-gulp.task("avif", function () {
+gulp.task("avif", async function () {
+  const avif = (await import("gulp-avif")).default;
   return gulp
     .src("./src/img/**/*.{jpg,png}")
     .pipe(avif())
