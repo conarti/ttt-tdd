@@ -23,13 +23,17 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "18"
 
       - name: Build Book
         working-directory: book
         run: |
           npm ci
           npm run build
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
 
       - name: Build Game
         working-directory: game
