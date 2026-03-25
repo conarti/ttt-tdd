@@ -60,6 +60,7 @@ function buildNavHtml(chapterIndex) {
   } else {
     links += "<span></span>";
   }
+  links += "<button class='theme-toggle' type='button'></button>";
   links += "</div>";
 
   const toc =
@@ -129,6 +130,7 @@ gulp.task("js", function () {
       "./node_modules/prismjs/components/prism-json.min.js",
       "./node_modules/prismjs/plugins/line-numbers/prism-line-numbers.min.js",
       "./node_modules/ilyabirman-likely/release/likely.min.js",
+      "./src/js/theme-toggle.js",
     ])
     .pipe(concat("libs.js"))
     .pipe(gulp.dest("./dist/js/"));

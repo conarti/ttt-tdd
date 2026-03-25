@@ -3,7 +3,8 @@
 }
 
 body {
-  background: #f1f8ff;
+  background: var(--bg);
+  color: var(--text);
   margin: 0;
   font-size: 16px;
   line-height: 1.5em;
@@ -45,13 +46,13 @@ p + ul {
 }
 
 a {
-  color: #0000fe;
+  color: var(--link);
 }
 a:visited {
-  color: #542189;
+  color: var(--link-visited);
 }
 a:hover {
-  color: #fb3347;
+  color: var(--link-hover);
 }
 
 pre {
@@ -79,7 +80,7 @@ figcaption {
   text-align: center;
   padding: 0 1rem 0 0;
   margin: -1rem 0 1rem 0;
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--text-faint);
   max-width: 475px;
 }
 
@@ -91,7 +92,7 @@ pre[class*="language-"] {
 }
 
 p > code {
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-strong);
   padding: 0.1em 0.4em;
   border-radius: 5px;
   font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
@@ -100,7 +101,7 @@ p > code {
 
 .disclaimer,
 .disclaimer a {
-  color: rgba(0, 0, 0, 0.3);
+  color: var(--text-faint);
 }
 
 .code {
@@ -118,10 +119,10 @@ p > code {
 }
 
 .line-numbers .line-numbers-rows {
-  border-right-color: rgba(0, 0, 0, 0.3);
+  border-right-color: var(--text-faint);
 }
 .line-numbers-rows > span:before {
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--text-muted);
 }
 
 .likely__counter {

@@ -15,7 +15,7 @@
   width: 6px;
   left: 0.8rem;
   top: 0.2rem;
-  background: black;
+  background: var(--logo-color);
 }
 .tic:before {
   transform: rotate(45deg);
@@ -27,7 +27,7 @@
 .tac:before {
   position: absolute;
   content: " ";
-  border: 6px solid black;
+  border: 6px solid var(--logo-color);
   width: 1.2rem;
   height: 1.2rem;
   top: 0.3rem;
