@@ -1,7 +1,7 @@
 .anchor,
 .anchor:visited {
   text-decoration: none;
-  color: black;
+  color: var(--text);
   font-size: 1rem;
   position: absolute;
   left: -1.5rem;
@@ -15,7 +15,7 @@
 .anchor:hover,
 .anchor:visited:hover,
 .disclaimer a:hover {
-  color: #fb3347;
+  color: var(--link-hover);
 }
 
 h2:hover .anchor {

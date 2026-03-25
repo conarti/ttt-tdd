@@ -8,8 +8,8 @@
   max-width: 600px;
   min-width: 300px;
   padding: 0 20px 0 30px;
-  background: white;
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
 }
 
 .text img {
@@ -23,7 +23,7 @@
 }
 
 .code-filename {
-  color: rgba(0, 0, 0, 0.4);
+  color: var(--text-muted);
 }
 
 .grid:first-child .text {
@@ -49,7 +49,7 @@
   }
 
   .code {
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border);
     border-left: 0;
     border-right: 0;
     padding-top: 1rem;
